@@ -17,6 +17,7 @@ function Matrix(rows, cols) {
 
     this.get = function(y, x) { return m_grid[y][x]; };
     this.get_grid = function() { return m_grid; };
+    this.set_grid = function(grid) { m_grid = grid; };
 
 
     this.from_array = function(a) {
@@ -178,6 +179,30 @@ function Matrix(rows, cols) {
         for(var y = 0; y != m_rows; y++) {
             for(var x = 0; x != m_cols; x++) {
                 grid[y][x] = callback(m_grid[y][x]);
+            }
+        }
+
+        return result;
+    };
+
+
+    this.normalize = function(min, max) {
+        var result = new Matrix(m_rows, m_cols);
+        var grid = result.get_grid();
+
+        var value;
+        for(var y = 0; y != m_rows; y++) {
+            for(var x = 0; x != m_cols; x++) {
+                value = m_grid[y][x];
+                grid[y][x] = value;
+                
+                if(value > max) {
+                    grid[y][x] = max;
+                }
+                
+                if(value < min) {
+                    grid[y][x] = min;
+                }
             }
         }
 

@@ -1,4 +1,5 @@
 include("NeuralNet");
+include("snake_data");
 
 function SnakeAI(world, snake, food) {
     // # Inputs
@@ -13,6 +14,9 @@ function SnakeAI(world, snake, food) {
     var m_food = food;
 
     var m_brain = new NeuralNet(24, 16, 4);
+    if(typeof snake_data != "undefined") {
+        m_brain.load(snake_data);
+    }
 
     var m_learn = false;
 
@@ -46,6 +50,8 @@ function SnakeAI(world, snake, food) {
                 best_guess = guess[i];
             }
         }
+
+        console.log(guess);
 
         switch(movement) {
             case UP:

@@ -10,7 +10,7 @@ function SnakeStage() {
 
     var m_ai;
 
-    var m_delay = 16;
+    var m_delay = 100;
     var m_next_time = new Date().getTime() + m_delay;
     var m_current_time = new Date().getTime();
 

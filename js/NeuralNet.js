@@ -76,17 +76,20 @@ function NeuralNet(num_input, num_hidden, num_output) {
         hidden_delta = hidden_delta.dot(input.transpose());
         
         m_output_matrix = m_output_matrix.add(output_delta);
+        m_output_matrix = m_output_matrix.normalize(min_val, max_val);
+
         m_hidden_matrix = m_hidden_matrix.add(hidden_delta);
+        m_hidden_matrix = m_hidden_matrix.normalize(min_val, max_val);
     };
 
     this.get_error = function() { return m_last_error.to_array(); };
 
     this.save = function() {
         var json_data = {
-            bias_hidden: m_bias_hidden,
-            bias_output: m_bias_output,
-            hidden: m_hidden_matrix.to_array(),
-            output: m_output_matrix.to_array()
+            bias_hidden: m_bias_hidden.get_grid(),
+            bias_output: m_bias_output.get_grid(),
+            hidden: m_hidden_matrix.get_grid(),
+            output: m_output_matrix.get_grid()
         };
 
         console.log( JSON.stringify(json_data) );
@@ -95,9 +98,11 @@ function NeuralNet(num_input, num_hidden, num_output) {
     this.load = function(data) {
         var raw = JSON.parse(data);
 
-        m_bias_hidden = raw.bias_hidden;
-        m_bias_output = raw.bias_output;
-        m_hidden_matrix = raw.hidden;
-        m_output_matrix = raw.output;
+        m_bias_hidden.set_grid( raw.bias_hidden );
+        m_bias_output.set_grid( raw.bias_output );
+        m_hidden_matrix.set_grid( raw.hidden );
+        m_output_matrix.set_grid( raw.output );
+
+        console.log(raw);
     };
 }
