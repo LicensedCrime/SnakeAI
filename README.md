@@ -8,3 +8,5 @@ Snake game made in JS + AI piloting
 # AI
 + The load() option of the Network requires a JSON string
 + A JSON string will be generated via the save() method
+
+![still not perfect](https://imgur.com/hxgzzrH "Found it! Nah, i m not hungry...")
