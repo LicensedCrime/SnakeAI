@@ -45,8 +45,8 @@ function SnakeStage() {
     };
 
 
-    this.custom_run = function() {
-        var iter = 30000;
+    this.custom_run = function(iterations) {
+        var iter = iterations;
         while(iter--) {
             this.run_tick();
         }
@@ -79,8 +79,10 @@ function SnakeStage() {
             // m_delay *= 0.8;
         }
 
-        var snake_x = m_snake.get_x();
-        var snake_y = m_snake.get_y();
+        var snake_pos = m_snake.get_position();
+        var snake_x = snake_pos.x;
+        var snake_y = snake_pos.y;
+
         var world_cols = m_world.get_num_cols();
         var world_rows = m_world.get_num_rows();
         if( snake_x < 0 || snake_x >= world_cols || snake_y < 0 || snake_y >= world_rows ) {
