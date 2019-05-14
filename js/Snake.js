@@ -19,6 +19,7 @@ function Snake(world) {
 
     this.get_direction = function() { return m_direction; };
 
+    this.get_position = function() { return {x: m_body[0].x, y: m_body[0].y}; };
     this.set_position = function(pos_x, pos_y) {
 
         if(pos_x < m_world.get_num_cols() - m_initial_length) {
@@ -131,7 +132,8 @@ function Snake(world) {
     };
 
     this.self_collision = function() {
-        return this.collides_body(this.get_x(), this.get_y());
+        var pos = this.get_position();
+        return this.collides_body(pos.x, pos.y);
     };
 
     this.collides_body = function(x, y) {
@@ -143,7 +145,6 @@ function Snake(world) {
 
         return false;
     };
-
 
     this.on_move_up = function() {
         if(m_last_direction == DOWN) { return; }
