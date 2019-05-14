@@ -33,7 +33,8 @@ onload(function() {
     stage.initialize(world, snake, food);
     stage.on_change = renderer.render;
 
-    // stage.run();
+    stage.run();
 
-    stage.custom_run();
+    // var num_iterations = 5000000;
+    // stage.custom_run(num_iterations);
 });

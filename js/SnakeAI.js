@@ -51,8 +51,6 @@ function SnakeAI(world, snake, food) {
             }
         }
 
-        console.log(guess);
-
         switch(movement) {
             case UP:
                 m_snake.on_move_up();
@@ -98,21 +96,22 @@ function SnakeAI(world, snake, food) {
 
 
     this.fetch_data = function(iterX, iterY) {
-        var x = m_snake.get_x();
-        var y = m_snake.get_y();
+        var snake_pos = m_snake.get_position();
+        var x = snake_pos.x;
+        var y = snake_pos.y;
 
-        var wX = m_world.get_num_cols();
-        var wY = m_world.get_num_rows();
+        var wX = m_world.get_num_cols()-1;
+        var wY = m_world.get_num_rows()-1;
 
         var distance = 1;
         var found_food = false;
         var found_body = false;
 
-        var data = [1, 1, 1];
+        var data = [0, 1, 1];
         var food_pos = m_food.get_position();
         while(x < wX && y < wY && x >= 0 && y >= 0) {
             if(!found_food && food_pos.x == x && food_pos.y == y) {
-                data[0] = 1 / distance;
+                data[0] = 1;
                 found_food = true;
             }
 
@@ -136,8 +135,9 @@ function SnakeAI(world, snake, food) {
         var direction = m_snake.get_direction();
         var result;
 
-        var x = m_snake.get_x();
-        var y = m_snake.get_y();
+        var snake_pos = m_snake.get_position();
+        var x = snake_pos.x;
+        var y = snake_pos.y;
 
         var wX = m_world.get_num_cols();
         var wY = m_world.get_num_rows();
@@ -146,62 +146,74 @@ function SnakeAI(world, snake, food) {
         var fX = food_position.x;
         var fY = food_position.y;
 
-        // [UP, RIGHT, DOWN, LEFT]
+        if(direction == UP || direction == DOWN) {
+            result = this.direction_to_array(direction);
 
-        if(direction == UP) {
+            // move towards food
+            if(x > fX) {
+                result = this.direction_to_array(LEFT);
+            } 
 
-            if(m_snake.collides_body(x, y+1) || y-1 < 0) {
+            if(x < fX){
+                result = this.direction_to_array(RIGHT);
+            }
 
-                if(x > fX) {
-                    result = [0, 0, 0, 1];
-                } else {
-                    result = [0, 1, 0, 0];
-                }
-            } else {
-                result = [1, 0, 0, 0];
+            var new_dir = this.direction_from_array(result);
+            if(new_dir == UP && fY > y || new_dir == DOWN && fY < y) {
+                result = this.direction_to_array( (Math.round(Math.random()) ? LEFT : RIGHT) );
             }
         }
 
-        if(direction == DOWN) {
-            if(m_snake.collides_body(x, y-1) || y+1 > wY) {
+        if(direction == LEFT || direction == RIGHT) {
+            result = this.direction_to_array(direction);
 
-                if(x > fX) {
-                    result = [0, 0, 0, 1];
-                } else {
-                    result = [0, 1, 0, 0];
-                }
-            } else {
-                result = [0, 0, 1, 0];
+            // move towards food
+            if(y > fY) {
+                result = this.direction_to_array(DOWN);
+            } 
+            
+            if(y < fY) {
+                result = this.direction_to_array(UP);
+            }
+
+            var new_dir = this.direction_from_array(result);
+            if(new_dir == LEFT && fX > x || new_dir == RIGHT && fX < x) {
+                result = this.direction_to_array( (Math.round(Math.random()) ? UP : DOWN) );
             }
         }
 
-        if(direction == LEFT) {
-            if(m_snake.collides_body(x-1, y) || x-1 < 0) {
-
-                if(y > fY) {
-                    result = [0, 0, 1, 0];
-                } else {
-                    result = [1, 0, 0, 0];
-                }
-            } else {
-                result = [0, 0, 0, 1];
-            }
-        }
-
-        if(direction == RIGHT) {
-            if(m_snake.collides_body(x+1, y) || x+1 > wX) {
-
-                if(y > fY) {
-                    result = [0, 0, 1, 0];
-                } else {
-                    result = [1, 0, 0, 0];
-                }
-            } else {
-                result = [0, 1, 0, 0];
-            }
-        }
-
+        // console.log(
+        //     result[0] ? "up" : result[1] ? "right" : result[2] ? "down" : result[3] ? "left" : "undefined"
+        // );
         return result;
+    };
+
+
+    this.direction_to_array = function(direction) {
+        
+        // [UP, RIGHT, DOWN, LEFT]
+        switch(direction) {
+            case UP:
+                return [1, 0, 0, 0];
+            case DOWN:
+                return [0, 0, 1, 0];
+            case LEFT:
+                return [0, 0, 0, 1];
+            case RIGHT:
+                return [0, 1, 0, 0];
+        }
+
+        return [1, 0, 0, 0];
+    };
+
+
+    this.direction_from_array = function(arr) {
+        if(arr[UP]) { return UP; };
+        if(arr[RIGHT]) { return RIGHT; };
+        if(arr[DOWN]) { return DOWN; };
+        if(arr[LEFT]) { return LEFT; };
+
+        return UP;
     };
 
 
